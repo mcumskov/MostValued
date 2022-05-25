@@ -100,7 +100,7 @@ def prefs_changed(cmdr, is_beta):
 
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
-    logger.info(entry)
+    logger.debug(entry)
     if entry['event'] == 'SAAScanComplete':
         addScannedBody(entry['BodyName'], system)
         updateRowColorByBodyName(entry['BodyName'], 'green')
@@ -108,6 +108,7 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
     # if entry['event'] == 'SellExplorationData':
     # {'timestamp': '2022-05-21T22:46:41Z', 'event': 'SellExplorationData', 'Systems': ['HR 3404'], 'Discovered': [], 'BaseValue': 2035, 'Bonus': 0, 'TotalEarnings': 2035}
 
+    #{'timestamp': '2022-05-24T22:15:18Z', 'event': 'MultiSellExplorationData', 'Discovered': [OrderedDict([('SystemName', 'Trianguli Sector UO-R b4-2'), ('NumBodies', 4)]), OrderedDict([('SystemName', 'Tribeb'), ('NumBodies', 12)]), OrderedDict([('SystemName', 'Crucis Sector KH-V b2-2'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Sahun'), ('NumBodies', 6)]), OrderedDict([('SystemName', 'Antliae Sector FL-Y b2'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'Tascheter Sector AG-O a6-0'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Trianguli Sector TU-O a6-0'), ('NumBodies', 6)]), OrderedDict([('SystemName', 'Trianguli Sector BM-L a8-0'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Crucis Sector CQ-Y c23'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'EGM 559'), ('NumBodies', 7)]), OrderedDict([('SystemName', 'Xuanebuth'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'Col 285 Sector FQ-O c6-25'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Sakaja'), ('NumBodies', 3)]), OrderedDict([('SystemName', 'LP 437-12'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Puppis Sector RD-T b3-3'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'Sharru Sector CV-Y b3'), ('NumBodies', 5)]), OrderedDict([('SystemName', 'Shui Wei Sector ZE-Z b3'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Hakkaia'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Alrai Sector KN-S b4-4'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'BPM 17113'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Crucis Sector KN-T b3-4'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Hydrae Sector FM-V b2-4'), ('NumBodies', 3)]), OrderedDict([('SystemName', 'Shui Wei Sector XJ-Z b4'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Hyades Sector PN-J b9-4'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Igbo Kora'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'Turots'), ('NumBodies', 13)]), OrderedDict([('SystemName', 'Miquich'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Paitina'), ('NumBodies', 5)]), OrderedDict([('SystemName', 'Rongites'), ('NumBodies', 6)]), OrderedDict([('SystemName', 'Col 285 Sector PH-B b14-5'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Carini'), ('NumBodies', 3)]), OrderedDict([('SystemName', 'ICZ DQ-X b1-6'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Col 285 Sector CK-X b15-6'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'LFT 507'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'Col 285 Sector IR-A b15-7'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Crucis Sector JS-T b3-8'), ('NumBodies', 2)]), OrderedDict([('SystemName', 'Graba'), ('NumBodies', 4)]), OrderedDict([('SystemName', 'Hyades Sector LZ-K a23-1'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Col 285 Sector SS-D a28-1'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'LHS 253'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Puppis Sector AQ-P a5-2'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Trianguli Sector CB-N a7-2'), ('NumBodies', 1)]), OrderedDict([('SystemName', 'Col 285 Sector AA-A a30-5'), ('NumBodies', 1)])], 'BaseValue': 5454317, 'Bonus': 0, 'TotalEarnings': 5454317}
     if entry['event'] in ['Location', 'FSDJump']:
         thread = threading.Thread(
             target=getDataFromEDSM, name='EDSM worker', args=(entry['StarSystem'],))
@@ -129,7 +130,6 @@ def getDataFromEDSM(systemName):
     logger.info('getDataFromEDSM')
     if not this.edsm_session:
         this.edsm_session = requests.Session()
-    # systemName = 'Bleia Dryiae DY-F d12-3'
     this.currentSystem = systemName
     this.bodies = getSystemBodies(systemName)
 
@@ -180,7 +180,6 @@ def getNameOfBody(name, systemName):
 def processData(event):
 
     systemName = this.currentSystem
-    # systemName = 'Bleia Dryiae DY-F d12-3'
 
     tBody = tk.Frame(this.frame, name='table_body')
 
@@ -240,17 +239,14 @@ def getScannedBodies(names):
     return response
 
 
+# TODO Refactor this...
 def updateRowColorByBodyName(name, color):
     for frames in this.frame.winfo_children():
         frameName = str(frames).rpartition('.')[-1]
-        logger.debug(frameName)
         if frameName == 'table_body':
             for bodyFrames in frames.winfo_children():
                 bodyFrameName = str(bodyFrames).rpartition('.')[-1]
-                logger.debug(bodyFrameName)
-                # body['bodyName'].replace(' ', '-').lower()
                 if bodyFrameName == name.replace(' ', '-').lower():
                     for item in bodyFrames.winfo_children():
                         itemName = str(item).rpartition('.')[-1]
-                        logger.debug(itemName)
                         item.configure(fg=color)
