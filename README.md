@@ -32,4 +32,4 @@ Scanned
 
 Very far (hardcoded red for the image)
 
-![](https://i.gyazo.com/cc9288ab4e298debcaffa96c6cdf2695.png)
+![](https://i.gyazo.com/c2e82b92f2e4d829b954df694e2f59b9.png)
