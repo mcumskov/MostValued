@@ -30,6 +30,6 @@ Scanned
 
 ![](https://i.gyazo.com/a64b2b606ada22f4f8dab9ef35398c4a.png) ![](https://i.gyazo.com/0bb4b77e777e3d286e5a9433be671bdf.png) ![](https://i.gyazo.com/e26aab80ba049cbe6c7870d18056bd9f.png)
 
-Very far (hardcoded red for the image)
+Very far
 
 ![](https://i.gyazo.com/c2e82b92f2e4d829b954df694e2f59b9.png)
